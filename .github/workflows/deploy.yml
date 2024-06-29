@@ -12,7 +12,12 @@ jobs:
 
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v3  # actions/checkout@v2'yi actions/checkout@v3 ile güncelleyin
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3  # actions/setup-node@v2'yi actions/setup-node@v3 ile güncelleyin
+      with:
+        node-version: '20'  # Node.js 20'yi kullanacak şekilde ayarlayın
 
     - name: Decode SSH Key
       run: echo "${{ secrets.SSH_KEY }}" | base64 --decode > ssh_key
@@ -23,7 +28,7 @@ jobs:
       shell: bash
 
     - name: Execute Remote SSH Commands
-      uses: appleboy/ssh-action@v0.1.6
+      uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
