@@ -1,0 +1,26 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3  # actions/checkout@v2'yi actions/checkout@v3 ile değiştirin
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3  # actions/setup-node@v2'yi actions/setup-node@v3 ile değiştirin
+      with:
+        node-version: '20'  # Node.js 16 yerine Node.js 20 kullanın
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run tests
+      run: npm test
