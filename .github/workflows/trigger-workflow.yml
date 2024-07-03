@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v3  # actions/checkout@v3 kullanarak güncelledik
 
     - name: Trigger Second Repo Workflow
       run: |
@@ -19,4 +19,4 @@ jobs:
         -H "Accept: application/vnd.github.v3+json" \
         -H "Authorization: token ${{ secrets.REPO_ACCESS_TOKEN }}" \
         https://api.github.com/repos/OWNER/SECOND_REPO/dispatches \
-        -d '{"event_type":"trigger_workflow"}    
+        -d '{"event_type":"trigger_workflow"}' 
