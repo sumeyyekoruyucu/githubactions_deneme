@@ -1,0 +1,22 @@
+name: Trigger Another Repo Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  trigger-workflow:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Trigger Second Repo Workflow
+      run: |
+        curl -X POST \
+        -H "Accept: application/vnd.github.v3+json" \
+        -H "Authorization: token ${{ secrets.REPO_ACCESS_TOKEN }}" \
+        https://api.github.com/repos/OWNER/SECOND_REPO/dispatches \
+        -d '{"event_type":"trigger_workflow"}
