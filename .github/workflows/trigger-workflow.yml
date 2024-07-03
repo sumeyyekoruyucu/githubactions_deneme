@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
+    - name: Checkout Code        #herhangi bir degisiklik
       uses: actions/checkout@v3  # actions/checkout@v3 kullanarak güncelledik
 
     - name: Trigger Second Repo Workflow
