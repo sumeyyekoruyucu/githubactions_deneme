@@ -13,22 +13,14 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3    
-    
-    - name: SSH Anahtarını Ajanına Ekle
-      run: ssh-add ~/.ssh/authorized_keys
-
-    - name: Decode SSH Key
-      id: decode_key
-      run: |
-        echo "${{ secrets.EC2_SSH_KEY }}" | base64 --decode > ssh_key
-        chmod 600 ssh_key
 
     - name: Install Docker on EC2
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.EC2_HOST }}
+        port: ${{ secrets.PORT }}
         username: ${{ secrets.EC2_USER }}
-        key: ssh_key
+        key: ${{ secrets.EC2_SSH_KEY }}
         script: |
           echo "merhaba"
           sudo yum update -y
