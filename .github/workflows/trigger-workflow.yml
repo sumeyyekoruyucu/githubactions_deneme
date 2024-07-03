@@ -19,4 +19,4 @@ jobs:
         -H "Accept: application/vnd.github.v3+json" \
         -H "Authorization: token ${{ secrets.REPO_ACCESS_TOKEN }}" \
         https://api.github.com/repos/OWNER/SECOND_REPO/dispatches \
-        -d '{"event_type":"trigger_workflow"}
+        -d '{"event_type":"trigger_workflow"}    
