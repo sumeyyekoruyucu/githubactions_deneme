@@ -16,4 +16,4 @@ jobs:
     - name: Ping the website
       run: |
         echo "Pinging the website..."
-        ping -I ${{ secrets.TARGET_URL }}
+        ping -c 4 ${{ secrets.TARGET_URL }}
