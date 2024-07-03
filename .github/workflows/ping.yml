@@ -16,4 +16,4 @@ jobs:
     - name: Ping the website
       run: |
         echo "Pinging the website..."
-        ping www.test.salevali.com
+        ping -c 4 www.test.salevali.com
