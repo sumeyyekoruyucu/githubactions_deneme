@@ -27,6 +27,7 @@ jobs:
         username: ${{ secrets.EC2_USER }}
         key: ssh_key
         script: |
+          echo "merhaba"
           sudo yum update -y
           sudo amazon-linux-extras install docker -y
           sudo service docker start
