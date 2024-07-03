@@ -12,7 +12,10 @@ jobs:
 
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v3    
+    
+    - name: SSH Anahtarını Ajanına Ekle
+      run: ssh-add ~/.ssh/authorized_keys
 
     - name: Decode SSH Key
       id: decode_key
