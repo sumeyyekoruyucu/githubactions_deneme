@@ -1,0 +1,19 @@
+name: Ping a Website
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ping-website:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Ping the website
+      run: |
+        echo "Pinging the website..."
+        curl -I ${{ secrets.TARGET_URL }}
