@@ -1,7 +1,7 @@
 name: Trigger Other Repo
 on:
   schedule:
-    - cron: '0 12 * * *' # Hafta içi her gün saat 12:00'da tetiklenir
+    - cron: '0 21 * * *' # Hafta içi her gün saat 12:00'da tetiklenir
 
 jobs:
   check-time:
