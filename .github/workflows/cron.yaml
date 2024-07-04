@@ -1,7 +1,7 @@
 name: Trigger Other Repo
 on:
   schedule:
-    - cron: '* * * * *' # Hafta içi her gün saat 12:00'da tetiklenir
+    - cron: '38 20 * * 1-5' # Hafta içi her gün saat 12:00'da tetiklenir
 
 jobs:
   check-time:
@@ -13,8 +13,8 @@ jobs:
     - name: Check Time and Set Environment Variable
       id: check_time
       run: |
-        current_hour=$(date +'%H')
-        current_day=$(date +'%u')
+        current_hour=$(TZ=Europe/Berlin date +'%H')
+        current_day=$(TZ=Europe/Berlin date +'%u')
         if [ "$current_hour" -ge 12 ] && [ "$current_day" -lt 6 ]; then
           echo "It is after 12 PM on a weekday"
           echo "AFTER_NOON=true" >> $GITHUB_ENV
