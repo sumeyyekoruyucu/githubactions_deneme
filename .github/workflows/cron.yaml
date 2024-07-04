@@ -1,7 +1,7 @@
 name: Trigger Other Repo
 on:
   schedule:
-    - cron: '12 20 * * 1-5' # Hafta içi her gün saat 12:00'da tetiklenir
+    - cron: '* * * * *' # Hafta içi her gün saat 12:00'da tetiklenir
 jobs:
   check-time:
     runs-on: ubuntu-latest
