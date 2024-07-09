@@ -24,9 +24,9 @@ jobs:
     - name: List remote branches
       run: |
         echo "Remote branches:"
-        git branch -r
+        git ls-remote --heads origin
         echo "Remote branch count:"
-        git branch -r | wc -l
+        git ls-remote --heads origin | wc -l
 
     - name: List all branches
       run: |
@@ -34,4 +34,3 @@ jobs:
         git branch -a
         echo "Total branch count:"
         git branch -a | wc -l
-        
