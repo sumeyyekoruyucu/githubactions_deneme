@@ -1,0 +1,30 @@
+name: Auto Merge PR
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Auto merge if label is present
+      id: auto-merge
+      run: |
+        PR_LABELS=$(jq -r '.pull_request.labels[].name' "$GITHUB_EVENT_PATH")
+        if echo "$PR_LABELS" | grep -q "auto-merge"; then
+          gh pr merge ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --auto --squash
+        else
+          echo "Label 'auto-merge' not found. Skipping merge."
+        fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_EVENT_PATH: ${{ github.event_path }}
+
+    - name: Merge the Pull Request
+      if: steps.auto-merge.outputs.merge_result == 'success'
+      run: echo "Pull Request has been merged successfully."
