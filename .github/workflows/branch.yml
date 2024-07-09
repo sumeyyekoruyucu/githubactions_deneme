@@ -34,4 +34,3 @@ jobs:
         git branch -a
         echo "Total branch count:"
         git branch -a | wc -l
-        
