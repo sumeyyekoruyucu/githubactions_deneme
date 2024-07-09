@@ -28,3 +28,13 @@ jobs:
     - name: Merge the Pull Request
       if: steps.auto-merge.outputs.merge_result == 'success'
       run: echo "Pull Request has been merged successfully."
+
+#  Gereksinimler
+#Bu iş akışının çalışabilmesi için gh GitHub CLI aracının kurulmuş ve yapılandırılmış olması gerekmektedir. 
+#Ayrıca, GITHUB_TOKEN gizli değişkeninin ayarlanmış olması gerekir. Bu token, GitHub Actions tarafından sağlanır ve repo ayarlarından erişilebilir.
+
+# Gerekli İzinler
+#GITHUB_TOKEN ile repo üzerinde yazma izni gerekmektedir.
+#GitHub CLI (gh) aracının kurulu olması gerekmektedir.
+#Bu iş akışı, PR'ın belirli bir etikete sahip olup olmadığını kontrol eder ve etiketi bulursa PR'ı otomatik olarak merge eder. 
+#Etiket auto-merge olarak ayarlanmıştır, bu nedenle bu etiketi PR'a eklemeyi unutmayın.
