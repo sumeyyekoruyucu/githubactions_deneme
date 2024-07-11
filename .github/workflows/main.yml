@@ -13,11 +13,19 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '20'
+    
     - name: Install Dependencies
-      run: npm install
+      run: |
+        cd my-node-app
+        npm install
+
     - name: Start Application
       run: |
+        cd my-node-app
         pm2 start app.js
         pm2 save
+
     - name: Verify Deployment
-      run: pm2 list
+      run: |
+        cd my-node-app
+        pm2 list
