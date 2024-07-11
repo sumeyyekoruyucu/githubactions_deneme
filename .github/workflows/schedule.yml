@@ -2,7 +2,7 @@ name: Hourly Time Echo
 
 on:
   schedule:
-    - cron: '0 * * * *' # Her saat başında tetiklenir
+    - cron: '* * * * *' # Her saat başında tetiklenir
 
 jobs:
   print-time:
