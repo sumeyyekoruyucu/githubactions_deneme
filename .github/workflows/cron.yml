@@ -1,7 +1,7 @@
 name: Node.js Project Deployment
 on:
   schedule:
-    - cron: '0 1-23/2 * * *' # Çift saatlerde tetiklenir
+    - cron: '0 */2 * * *' # Çift saatlerde tetiklenir
 
 jobs:
   deploy-node:
