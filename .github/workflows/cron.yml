@@ -1,23 +1,20 @@
-name: Node.js Project Deployment
+name: Hourly Time Echo
+
 on:
   schedule:
-    - cron: '0 */2 * * *' # Çift saatlerde tetiklenir
+    - cron: '0 * * * *' # Her saat başında tetiklenir
 
 jobs:
-  deploy-node:
+  print-time:
     runs-on: ubuntu-latest
+
     steps:
-    - name: Checkout Code
+    - name: Checkout repository
       uses: actions/checkout@v3
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-    - name: Install Dependencies
-      run: npm install
-    - name: Start Application
+
+    - name: Print current time
       run: |
-        pm2 start app.js
-        pm2 save
-    - name: Verify Deployment
-      run: pm2 list
+        current_time=$(date +'%Y-%m-%d %H:%M:%S')
+        current_hour=$(date +'%H')
+        echo "Current Time (string): $current_time"
+        echo "Current Hour (value): $current_hour"
