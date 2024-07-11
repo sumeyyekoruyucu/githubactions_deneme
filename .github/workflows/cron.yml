@@ -1,0 +1,20 @@
+name: Hourly Time Echo
+
+on:
+  schedule:
+    - cron: '* * * * *' # Her saat başında tetiklenir
+
+jobs:
+  print-time:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Print current time
+      run: |
+        current_time=$(date +'%Y-%m-%d %H:%M:%S')
+        current_hour=$(date +'%H')
+        echo "Current Time (string): $current_time"
+        echo "Current Hour (value): $current_hour"
