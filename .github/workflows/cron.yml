@@ -16,5 +16,5 @@ jobs:
       run: |
         current_time=$(date +'%Y-%m-%d %H:%M:%S')
         current_hour=$(date +'%H')
-        echo "Current Time (string): $current_time"
-        echo "Current Hour (value): $current_hour"
+        echo "Current Time : $current_time"
+        echo "Current Hour : $current_hour"

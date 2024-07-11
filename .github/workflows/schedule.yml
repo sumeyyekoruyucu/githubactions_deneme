@@ -1,0 +1,35 @@
+name: Hourly Time Echo
+
+on:
+  schedule:
+    - cron: '0 * * * *' # Her saat başında tetiklenir
+
+jobs:
+  print-time:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Print current time
+      run: |
+        # Yerel saati al
+        local_time=$(date +'%Y-%m-%d %H:%M:%S %Z')
+        local_hour=$(date +'%H')
+
+        # UTC saati al
+        utc_time=$(date -u +'%Y-%m-%d %H:%M:%S UTC')
+        utc_hour=$(date -u +'%H')
+
+        echo "Yerel Zaman : $local_time"
+        echo "Yerel Saat : $local_hour"
+        echo "UTC Zaman : $utc_time"
+        echo "UTC Saat : $utc_hour"
+
+        # Karşılaştırma yap
+        if [ "$local_hour" -eq "$utc_hour" ]; then
+          echo "Yerel saat ve UTC saat aynıdır."
+        else
+          echo "Yerel saat ve UTC saat farklıdır."
+        fi
