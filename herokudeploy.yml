@@ -2,7 +2,7 @@ name: Node.js Project Deployment
 
 on:
   schedule:
-    - cron: '* * * * *' # her dk tetiklenir
+    - cron: '* * * * *' # Çift saatlerde tetiklenir
 
 jobs:
   deploy-node:
@@ -15,14 +15,12 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '16'
+        node-version: '20'
 
     - name: Print Local Time
       run: |
         local_time=$(date +'%Y-%m-%d %H:%M:%S %Z')
-        local_hour=$(date +'%H')
         echo "Local Time: $local_time"
-        echo "Local Hour: $local_hour"
 
     - name: Install PM2
       run: npm install -g pm2
@@ -32,9 +30,18 @@ jobs:
         cd my-node-app
         npm install
 
-    - name: Start Application
+    - name: Deploy to Heroku
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
       run: |
         cd my-node-app
+        git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+        git push heroku HEAD:main --force
+
+    - name: Start Application
+      run: |
+        cd my-node-app     
         pm2 start app.js
         pm2 save
 

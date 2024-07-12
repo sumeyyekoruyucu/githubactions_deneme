@@ -1,0 +1,22 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Deploy to EC2
+      run: |
+        scp -i /path/to/your-key-pair.pem -r my-node-app ec2-user@your-ec2-instance-ip:/home/ec2-user/
+        ssh -i /path/to/your-key-pair.pem ec2-user@your-ec2-instance-ip 'cd /home/ec2-user/my-node-app && npm install && pm2 restart app.js'
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}

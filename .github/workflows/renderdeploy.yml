@@ -1,8 +1,8 @@
-name: Node.js Project Deployment
+name: Node.js Project Render Deployment
 
 on:
   schedule:
-    - cron: '* * * * *' # her dk tetiklenir
+    - cron: '* * * * *' # Her dakikada tetiklenir
 
 jobs:
   deploy-node:
@@ -15,14 +15,12 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '16'
+        node-version: '20'
 
     - name: Print Local Time
       run: |
         local_time=$(date +'%Y-%m-%d %H:%M:%S %Z')
-        local_hour=$(date +'%H')
         echo "Local Time: $local_time"
-        echo "Local Hour: $local_hour"
 
     - name: Install PM2
       run: npm install -g pm2
@@ -31,10 +29,11 @@ jobs:
       run: |
         cd my-node-app
         npm install
+        npm start
 
     - name: Start Application
       run: |
-        cd my-node-app
+        cd my-node-app     
         pm2 start app.js
         pm2 save
 
@@ -42,3 +41,10 @@ jobs:
       run: |
         cd my-node-app
         pm2 list
+
+    - name: Deploy to Render
+      run: |
+        curl -X POST \
+        -H "Accept: application/vnd.github.v3+json" \
+        -H "Authorization: token ${{ secrets.RENDER_API_KEY }}" \
+        https://api.render.com/v1/services/srv-cq8i2mij1k6c73clg8vg?key=fx1p_zhIBVs/deploys
