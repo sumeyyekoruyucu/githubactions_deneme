@@ -42,14 +42,14 @@ jobs:
         cd my-node-app
         pm2 list
 
-    - name: Deploy to Render
-      run: |
-        curl -X POST \
-        -H "Accept: application/vnd.github.v3+json" \
-        -H "Authorization: token ${{ secrets.RENDER_API_KEY }}" \
-        https://api.render.com/v1/services/srv-cq8i2mij1k6c73clg8vg?key=fx1p_zhIBVs/deploys
     #- name: Deploy to Render
-    #  uses: JorgeLNJunior/render-deploy@v1.4.4
-    #  with:
-    #    service_id: ${{ secrets.RENDER_SERVICE_ID }}
-    #    api_key: ${{ secrets.RENDER_API_KEY }}
+    #  run: |
+    #    curl -X POST \
+    #    -H "Accept: application/vnd.github.v3+json" \
+    #    -H "Authorization: token ${{ secrets.RENDER_API_KEY }}" \
+    #    https://api.render.com/v1/services/srv-cq8i2mij1k6c73clg8vg?key=fx1p_zhIBVs/deploys
+    - name: Deploy to Render
+      uses: JorgeLNJunior/render-deploy@v1.4.4
+      with:
+        service_id: ${{ secrets.RENDER_SERVICE_ID }}
+        api_key: ${{ secrets.RENDER_API_KEY }}
