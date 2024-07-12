@@ -2,7 +2,7 @@ name: Node.js Project Deployment
 
 on:
   schedule:
-    - cron: '* * * * *' # her dk tetiklenir
+    - cron: '0 10 * * *' # her dk tetiklenir
 
 jobs:
   deploy-node:
