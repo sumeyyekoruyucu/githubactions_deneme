@@ -1,7 +1,10 @@
 const http = require('http');
 
-// Heroku portunu al, eğer yoksa 3000 portunu kullan
+// Render platformunda `PORT` environment variable kullanılır
 const port = process.env.PORT || 3000;
+
+// Heroku veya Render gibi platformlar dinamik host kullanır
+const hostname = '0.0.0.0';
 
 const server = http.createServer((req, res) => {
   res.statusCode = 200;
@@ -9,6 +12,6 @@ const server = http.createServer((req, res) => {
   res.end('Hello, World!\n');
 });
 
-server.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+server.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}/`);
 });
