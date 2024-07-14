@@ -20,7 +20,7 @@ jobs:
         run: ls -l
         
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v2
         with:
           node-version: '20.x'
 
@@ -43,7 +43,14 @@ jobs:
 
       - name: Build
         run: |
+          cd my-react-app
           yarn build
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: my-react-app/build
 
       - name: Deploy to Render
         env:
