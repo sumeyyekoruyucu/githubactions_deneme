@@ -31,6 +31,7 @@ jobs:
         run: |
           npx create-react-app my-react-app --template typescript
           cd my-react-app
+          yarn add react-scripts
           yarn install
 
       - name: Cache Yarn dependencies
