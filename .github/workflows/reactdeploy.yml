@@ -1,0 +1,52 @@
+name: Node.js CI and Deploy
+
+on: [push, pull_request]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Install Yarn
+        run: npm install -g yarn
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Cache Yarn dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Run tests
+        run: yarn test
+
+      - name: Upload yarn.lock
+        uses: actions/upload-artifact@v3
+        with:
+          name: yarn-lock-file
+          path: yarn.lock
+
+      - name: Deploy to Render
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+        run: |
+          curl -X POST \
+          -H "Authorization: Bearer $RENDER_API_KEY" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "serviceId": "srv-cq98g1rv2p9s73cfa71g?key=pJ-bnIJI-f4",
+            "branch": "main"
+          }' \
+          https://api.render.com/v1/services/srv-cq98g1rv2p9s73cfa71g?key=pJ-bnIJI-f4/deploys
