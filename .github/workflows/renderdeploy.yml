@@ -2,7 +2,7 @@ name: Node.js Project Render Deployment
 
 on:
   schedule:
-    - cron: '* * * * *' # Her dakikada tetiklenir
+    - cron: '0 6 * * *' # Her dakikada tetiklenir
 
 jobs:
   deploy-node:
