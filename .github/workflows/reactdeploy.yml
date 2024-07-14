@@ -16,6 +16,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: List files in the current directory
+        run: ls -l
+        
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -26,8 +29,6 @@ jobs:
 
       - name: Create React App
         run: |
-          mkdir -p /opt/render/project/src
-          cd /opt/render/project/src
           npx create-react-app my-react-app --template typescript
           cd my-react-app
           yarn install
@@ -42,14 +43,7 @@ jobs:
 
       - name: Build
         run: |
-          cd /opt/render/project/src/my-react-app
           yarn build
-
-      - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: build
-          path: /opt/render/project/src/my-react-app/build
 
       - name: Deploy to Render
         env:
