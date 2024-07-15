@@ -18,18 +18,11 @@ jobs:
         with:
           node-version: '20'  # Kullanmak istediğiniz Node.js sürümünü buraya ayarlayın
 
-      - name: Change directory to project folder
-        run: cd my-app
-
       - name: Install dependencies
         
         run: |
           cd my-app
           npm install
-
-      - name: Build the project
-        run: |
-          cd my-app
           npm run build
 
       - name: Deploy to Render
