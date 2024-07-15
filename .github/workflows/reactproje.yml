@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: '20'  # Kullanmak istediğiniz Node.js sürümünü buraya ayarlayın
 
-      - name: Install dependencies
+      - name: Install dependencies and build
         
         run: |
           cd my-app
