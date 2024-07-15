@@ -19,7 +19,7 @@ jobs:
           node-version: '20'  # Kullanmak istediğiniz Node.js sürümünü buraya ayarlayın
 
       - name: Change directory to project folder
-        run: cd my-app
+        run: cd my-app/public
 
       - name: Install dependencies
         run: npm install
