@@ -22,10 +22,15 @@ jobs:
         run: cd my-app
 
       - name: Install dependencies
-        run: npm install
+        
+        run: |
+          cd my-app
+          npm install
 
       - name: Build the project
-        run: npm run build
+        run: |
+          cd my-app
+          npm run build
 
       - name: Deploy to Render
         env:
