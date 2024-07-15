@@ -1,42 +1,24 @@
-name: React project
+name: Deploy to Render
 
 on:
   push:
     branches:
-      - main
+      - main  # veya ana dal adınızı buraya yazın
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: my-app
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '20'
+      - name: Install dependencies and build
+        run: |
+          npm install
+          npm run build
 
-    - name: Install dependencies
-      run: npm install
+      - name: Deploy to Render
+        uses: <render-deploy-action>  # Render için uygun deploy eylemi buraya gelir, Render'in GitHub Actions entegrasyonunu kullanabilirsiniz
 
-    - name: Build the project
-      run: npm run build
-
-    - name: Deploy to Render
-      env:
-        RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-        RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
-      run: |
-        curl -X POST \
-        -H 'Authorization: Bearer $RENDER_API_KEY' \
-        -H 'Content-Type: application/json' \
-        -d '{
-          "clearCache": true
-        }' \
-        "https://api.render.com/v1/services/$RENDER_SERVICE_ID/deploys"
+      # Diğer adımlar veya gereksinimler buraya eklenir
