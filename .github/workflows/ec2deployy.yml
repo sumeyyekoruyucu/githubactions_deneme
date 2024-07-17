@@ -60,7 +60,11 @@ jobs:
           sudo yum install -y git
 
           # Clone or pull the GitHub repository
-            git clone https://${TOKEN}@github.com/sumeyyekoruyucu/githubactions_deneme.git
+            if [ ! -d "githubactions_deneme" ]; then
+                git clone https://github.com/sumeyyekoruyucu/githubactions_deneme.git
+            else
+                echo "'githubactions_deneme' dizini zaten var. Varolan dizini güncellemek için 'githubactions_deneme' dizinine gidin ve 'git pull' komutunu kullanın."
+            fi
 
           # Change directory to the cloned repository
           cd /home/$EC2_USER/githubactions_deneme
