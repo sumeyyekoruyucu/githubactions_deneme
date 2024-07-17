@@ -42,7 +42,7 @@ jobs:
           EC2_USER: ${{ secrets.EC2_USER }}
           TOKEN: ${{ secrets.TOKEN }}
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/linux_key_5.pem $EC2_USER@$EC2_HOST << 'EOF'
+            ssh -o StrictHostKeyChecking=no -i ~/.ssh/linux_key_5.pem $EC2_USER@$EC2_HOST 'mkdir -p /home/githubactions_deneme'  << 'EOF'
             set -e
             set -x
 
