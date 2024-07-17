@@ -17,6 +17,12 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '20' # Node.js versiyonunu ihtiyacınıza göre ayarlayın
+      
+      - name: Prepare SSH key
+        run: |
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/linux_key_5.pem
+          chmod 400 ~/.ssh/linux_key_5.pem
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
       - name: Install AWS CLI
         run: |
