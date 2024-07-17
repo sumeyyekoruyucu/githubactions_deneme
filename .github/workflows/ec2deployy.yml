@@ -16,7 +16,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14' # Daha eski bir sürüm kullanarak uyumluluk sağlıyoruz
+          node-version: '14.x' # Daha eski bir sürüm kullanarak uyumluluk sağlıyoruz
       
       - name: Install AWS CLI
         run: |
@@ -47,7 +47,7 @@ jobs:
           set -x
 
           # Update the instance and install necessary packages
-          sudo yum update -y
+          sudo yum update -y --skip-broken
           sudo yum install -y git
 
           # Install Node.js ve npm
