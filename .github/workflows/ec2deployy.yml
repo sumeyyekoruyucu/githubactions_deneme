@@ -55,7 +55,8 @@ jobs:
 
           # Configure Nginx
           sudo amazon-linux-extras install nginx1 -y
-          sudo service nginx start
+          sudo systemctl enable nginx
+          sudo systemctl start nginx
           sudo bash -c 'cat > /etc/nginx/conf.d/my-node-app.conf' << EOL
           server {
               listen 80;
@@ -71,5 +72,5 @@ jobs:
               }
           }
           EOL
-          sudo service nginx restart
+          sudo nginx -t && sudo systemctl restart nginx
           EOF
