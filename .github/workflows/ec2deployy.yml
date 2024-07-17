@@ -72,8 +72,7 @@ jobs:
           cd /home/ec2-user/githubactions_deneme/my-node-app
           sudo amazon-linux-extras install epel
           sudo yum repolist
-          sudo curl -fsSL https://rpm.nodesource.com/setup_12.x | sudo bash -
-          sudo yum install nodejs
+          sudo amazon-linux-extras install nodejs12
           sudo node -v
           sudo npm -v
 
