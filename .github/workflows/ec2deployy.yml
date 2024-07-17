@@ -44,13 +44,16 @@ jobs:
           EC2_USER: ${{ secrets.EC2_USER }}
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/linux_key_5.pem $EC2_USER@$EC2_HOST << 'EOF'
+            set -e
+            set -x
+
             # Update the instance and install necessary packages
             sudo yum update -y
             sudo yum install -y git nodejs npm
 
             # Clone the GitHub repository
             if [ ! -d "/home/$EC2_USER/githubactions_deneme" ]; then
-              git clone https://github.com/sumeyyekoruyucu/githubactions_deneme.git /home/$EC2_USER/githubactions_deneme
+              git clone https://github.com/yourusername/githubactions_deneme.git /home/$EC2_USER/githubactions_deneme
             else
               cd /home/$EC2_USER/githubactions_deneme && git pull
             fi
