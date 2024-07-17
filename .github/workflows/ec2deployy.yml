@@ -63,20 +63,14 @@ jobs:
           if [ ! -d "githubactions_deneme" ]; then
               git clone https://github.com/sumeyyekoruyucu/githubactions_deneme.git
           else
-              echo "'githubactions_deneme' dizini zaten var. Varolan dizini güncellemek için 'githubactions_deneme' dizinine gidin ve 'git pull' komutunu kullanın."
+              echo " Varolan dizini güncellemek için 'githubactions_deneme' dizinine gidin ve 'git pull' komutunu kullanın."
               cd githubactions_deneme
               git pull origin main  # or the appropriate branch
           fi
 
-          # Ensure the directory structure exists
-          mkdir -p /home/$EC2_USER/githubactions_deneme/my-node-app
-
-          # Change directory to the cloned repository
-          cd /home/$EC2_USER/githubactions_deneme
-
           # Navigate to the application directory and install dependencies
           cd /home/$EC2_USER/githubactions_deneme/my-node-app
-          npm install
+          sudo npm install
 
           # Start the application using PM2
           sudo npm install -g pm2
