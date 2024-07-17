@@ -65,9 +65,6 @@ jobs:
           # Change directory to the cloned repository
           cd /home/$EC2_USER/githubactions_deneme
 
-          # Perform git pull to update the repository
-          git pull origin main
-
           # Navigate to the application directory and install dependencies
           cd /home/$EC2_USER/githubactions_deneme/my-node-app
           npm install
