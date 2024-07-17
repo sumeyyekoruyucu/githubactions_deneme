@@ -42,7 +42,7 @@ jobs:
           EC2_USER: ${{ secrets.EC2_USER }}
           TOKEN: ${{ secrets.TOKEN }}
         run: |
-            ssh -o StrictHostKeyChecking=no -i ~/.ssh/linux_key_5.pem $EC2_USER@$EC2_HOST 'mkdir -p /home/githubactions_deneme'  << 'EOF'
+            ssh -o StrictHostKeyChecking=no -i ~/.ssh/linux_key_5.pem $EC2_USER@$EC2_HOST 'mkdir -p /home/$EC2_USER/githubactions_deneme'  << 'EOF'
             set -e
             set -x
 
@@ -52,7 +52,7 @@ jobs:
 
             # Clone the GitHub repository
             if [ ! -d "/home/$EC2_USER/githubactions_deneme" ]; then
-              git clone https://${TOKEN}@github.com/sumeyyekoruyucu/githubactions_deneme.git /home/githubactions_deneme
+              git clone https://${TOKEN}@github.com/sumeyyekoruyucu/githubactions_deneme.git /home/$EC2_USER/githubactions_deneme
             else
               cd /home/$EC2_USER/githubactions_deneme && git pull
             fi
