@@ -52,7 +52,7 @@ jobs:
 
             # Clone the GitHub repository
             if [ ! -d "/home/$EC2_USER/githubactions_deneme" ]; then
-              git clone https://${TOKEN}@github.com/sumeyyekoruyucu/githubactions_deneme.git /home/$EC2_USER/githubactions_deneme
+              git clone https://${TOKEN}@github.com/sumeyyekoruyucu/githubactions_deneme.git /home/githubactions_deneme
             else
               cd /home/$EC2_USER/githubactions_deneme && git pull
             fi
@@ -85,4 +85,4 @@ jobs:
             }
             EOL
             sudo nginx -t && sudo systemctl restart nginx
-          EOF
+            EOF
