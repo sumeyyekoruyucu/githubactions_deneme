@@ -24,8 +24,8 @@ jobs:
         run: |
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm install 12
-          nvm use 12
+          nvm install 14
+          nvm use 14
 
       - name: Install AWS CLI
         run: |
@@ -72,7 +72,7 @@ jobs:
           cd /home/ec2-user/githubactions_deneme/my-node-app
           sudo amazon-linux-extras install epel
           sudo yum repolist
-          sudo amazon-linux-extras install nodejs12
+          sudo amazon-linux-extras install nodejs14
           sudo node -v
           sudo npm -v
 
