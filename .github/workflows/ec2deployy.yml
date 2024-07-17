@@ -16,27 +16,29 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14' # Node.js versiyonunu ihtiyacınıza göre ayarlayın
+          node-version: '20' # Node.js versiyonunu ihtiyacınıza göre ayarlayın
 
       - name: Install dependencies
         run: npm install
+        working-directory: ./my-node-app
 
       - name: Run tests
         run: npm test
+        working-directory: ./my-node-app
 
       - name: Install AWS CLI
         run: |
-          sudo apt-get update
-          sudo apt-get install -y python3-pip
-          pip3 install awscli
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
 
       - name: Copy files to EC2
         env:
           EC2_HOST: ${{ secrets.EC2_HOST }}
           EC2_USER: ${{ secrets.EC2_USER }}
-          EC2_KEY: ${{ secrets.EC2_KEY }}
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
-          echo "${{ secrets.EC2_KEY }}" > ec2_key.pem
+          echo "${{ secrets.EC2_SSH_KEY }}" > ec2_key.pem
           chmod 400 ec2_key.pem
           scp -o StrictHostKeyChecking=no -i ec2_key.pem -r ./my-node-app/* $EC2_USER@$EC2_HOST:/home/$EC2_USER/my-node-app/
 
@@ -44,7 +46,7 @@ jobs:
         env:
           EC2_HOST: ${{ secrets.EC2_HOST }}
           EC2_USER: ${{ secrets.EC2_USER }}
-          EC2_KEY: ${{ secrets.EC2_KEY }}
+          EC2_KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
           ssh -o StrictHostKeyChecking=no -i ec2_key.pem $EC2_USER@$EC2_HOST << 'EOF'
           sudo yum update -y
