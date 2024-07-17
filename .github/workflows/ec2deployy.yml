@@ -24,8 +24,8 @@ jobs:
         run: |
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm install 14
-          nvm use 14
+          nvm install 10
+          nvm use 10
 
       - name: Install AWS CLI
         run: |
@@ -73,7 +73,7 @@ jobs:
           sudo amazon-linux-extras install epel
           sudo yum repolist
           curl -fsSL https://rpm.nodesource.com/setup_14.x | sudo bash -
-          sudo yum install -y nodejs
+          sudo yum install -y nodejs10
           sudo node -v
           sudo npm -v
 
