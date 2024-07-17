@@ -24,8 +24,8 @@ jobs:
         run: |
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm install 10
-          nvm use 10
+          nvm install 14
+          nvm use 14
 
       - name: Install AWS CLI
         run: |
@@ -72,8 +72,8 @@ jobs:
           cd /home/ec2-user/githubactions_deneme/my-node-app
           sudo amazon-linux-extras install epel
           sudo yum repolist
-          curl -fsSL https://rpm.nodesource.com/setup_10.x | sudo bash -
-          sudo yum install -y nodejs10
+          curl -fsSL https://nodejs.org/dist/latest-v14.x/node-v14.x.x-linux-x64.tar.xz | sudo tar -xJ --directory /usr/local --strip-components 1
+          sudo dnf install -y nodejs14
           sudo node -v
           sudo npm -v
 
