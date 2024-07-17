@@ -70,11 +70,11 @@ jobs:
 
           # Navigate to the application directory and install dependencies
           cd /home/ec2-user/githubactions_deneme/my-node-app
-          sudo npx npm install
+          sudo yum npm install
 
           # Start the application using PM2
           sudo npm install -g pm2
-          pm2 start app.js --name my-node-app
+          sudo pm2 start app.js --name my-node-app
 
           # Configure Nginx
           sudo amazon-linux-extras install nginx1 -y
