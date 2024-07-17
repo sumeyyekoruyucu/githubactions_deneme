@@ -13,11 +13,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Install Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '12.x' # Daha eski bir sürüm kullanarak uyumluluk sağlıyoruz
-      
+      - name: Install nvm
+        run: |
+          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+      - name: Install Node.js using nvm
+        run: |
+          nvm install 12
+          nvm use 12
+
       - name: Install AWS CLI
         run: |
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -49,10 +56,6 @@ jobs:
           # Update the instance and install necessary packages
           sudo yum update -y --skip-broken
           sudo yum install -y git
-
-          # Install Node.js ve npm
-          curl -sL https://rpm.nodesource.com/setup_14.x | sudo bash -
-          sudo yum install -y nodejs
 
           # Clone the GitHub repository
           if [ ! -d "/home/$EC2_USER/githubactions_deneme" ]; then
