@@ -50,7 +50,7 @@ jobs:
 
             # Clone the GitHub repository
             if [ ! -d "/home/$EC2_USER/githubactions_deneme" ]; then
-              git clone https://github.com/yourusername/githubactions_deneme.git /home/$EC2_USER/githubactions_deneme
+              git clone https://github.com/sumeyyekoruyucu/githubactions_deneme.git /home/$EC2_USER/githubactions_deneme
             else
               cd /home/$EC2_USER/githubactions_deneme && git pull
             fi
