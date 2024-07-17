@@ -17,6 +17,11 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '20' # Node.js versiyonunu ihtiyacınıza göre ayarlayın
+      # Çalışma dizinini göstermek için adım ekle
+      - name: Show working directory
+        run: |
+          pwd
+          ls -l
 
           # githubactions_deneme reposundaki my-node-app klasörünü iş akışının çalışma dizinine kopyala
       - name: Copy my-node-app directory to working directory
