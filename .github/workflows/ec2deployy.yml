@@ -42,47 +42,51 @@ jobs:
           EC2_USER: ${{ secrets.EC2_USER }}
           TOKEN: ${{ secrets.TOKEN }}
         run: |
-            ssh -o StrictHostKeyChecking=no -i ~/.ssh/linux_key_5.pem $EC2_USER@$EC2_HOST 'sudo mkdir -p /home/$EC2_USER/githubactions_deneme'  << 'EOF'
-            set -e
-            set -x
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/linux_key_5.pem $EC2_USER@$EC2_HOST << 'EOF'
+          set -e
+          set -x
 
-            # Update the instance and install necessary packages
-            sudo yum update -y
-            sudo yum install -y git nodejs npm
+          # Update the instance and install necessary packages
+          sudo yum update -y
+          sudo yum install -y git
 
-            # Clone the GitHub repository
-            if [ ! -d "/home/$EC2_USER/githubactions_deneme" ]; then
-              git clone https://${TOKEN}@github.com/sumeyyekoruyucu/githubactions_deneme.git /home/$EC2_USER/githubactions_deneme
-            else
-              cd /home/$EC2_USER/githubactions_deneme && git pull
-            fi
+          # Install Node.js and npm
+          curl -sL https://rpm.nodesource.com/setup_20.x | sudo bash -
+          sudo yum install -y nodejs
 
-            # Navigate to the application directory and install dependencies
-            cd /home/$EC2_USER/githubactions_deneme/my-node-app
-            npm install
+          # Clone the GitHub repository
+          if [ ! -d "/home/$EC2_USER/githubactions_deneme" ]; then
+            git clone https://${TOKEN}@github.com/sumeyyekoruyucu/githubactions_deneme.git /home/$EC2_USER/githubactions_deneme
+          else
+            cd /home/$EC2_USER/githubactions_deneme && git pull
+          fi
 
-            # Start the application using PM2
-            sudo npm install -g pm2
-            pm2 start app.js
+          # Navigate to the application directory and install dependencies
+          cd /home/$EC2_USER/githubactions_deneme/my-node-app
+          npm install
 
-            # Configure Nginx
-            sudo amazon-linux-extras install nginx1 -y
-            sudo systemctl enable nginx
-            sudo systemctl start nginx
-            sudo bash -c 'cat > /etc/nginx/conf.d/my-node-app.conf' << EOL
-            server {
-                listen 80;
-                server_name sumeyyedev.site;
+          # Start the application using PM2
+          sudo npm install -g pm2
+          pm2 start app.js --name my-node-app
 
-                location / {
-                    proxy_pass http://localhost:3000;
-                    proxy_http_version 1.1;
-                    proxy_set_header Upgrade \$http_upgrade;
-                    proxy_set_header Connection 'upgrade';
-                    proxy_set_header Host \$host;
-                    proxy_cache_bypass \$http_upgrade;
-                }
-            }
-            EOL
-            sudo nginx -t && sudo systemctl restart nginx
-            EOF
+          # Configure Nginx
+          sudo amazon-linux-extras install nginx1 -y
+          sudo systemctl enable nginx
+          sudo systemctl start nginx
+          sudo bash -c 'cat > /etc/nginx/conf.d/my-node-app.conf' << EOL
+          server {
+              listen 80;
+              server_name sumeyyedev.site;
+
+              location / {
+                  proxy_pass http://localhost:3000;
+                  proxy_http_version 1.1;
+                  proxy_set_header Upgrade \$http_upgrade;
+                  proxy_set_header Connection 'upgrade';
+                  proxy_set_header Host \$host;
+                  proxy_cache_bypass \$http_upgrade;
+              }
+          }
+          EOL
+          sudo nginx -t && sudo systemctl restart nginx
+          EOF
