@@ -18,64 +18,71 @@ jobs:
         with:
           node-version: '20' # Node.js versiyonunu ihtiyacınıza göre ayarlayın
       
-      - name: Prepare SSH key
-        run: |
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/linux_key_5.pem
-          chmod 400 ~/.ssh/linux_key_5.pem
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-
       - name: Install AWS CLI
         run: |
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
           unzip awscliv2.zip
           sudo ./aws/install --update
 
-
-      # EC2'ye dosyaları kopyalama
-      - name: Copy files to EC2
+      - name: Set up SSH key
         env:
-          EC2_HOST: ${{ secrets.EC2_HOST }}
-          EC2_USER: ${{ secrets.EC2_USER }}
           EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
-          echo "${{ secrets.EC2_SSH_KEY }}" > linux_key_5.pem
-          chmod 400 linux_key_5.pem
-          ssh-keyscan -H $EC2_HOST >> ~/.ssh/known_hosts
-          scp -o StrictHostKeyChecking=no -i linux_key_5.pem -r ./my-node-app/* $EC2_USER@$EC2_HOST:/home/$EC2_USER/
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/linux_key_5.pem
+          chmod 400 ~/.ssh/linux_key_5.pem
 
-      # SSH ile bağlanarak EC2 üzerinde deploy işlemleri yapma
-      - name: SSH and deploy
+      - name: Add EC2 host to known hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: SSH to EC2 and deploy
         env:
           EC2_HOST: ${{ secrets.EC2_HOST }}
           EC2_USER: ${{ secrets.EC2_USER }}
-          EC2_KEY: ${{ secrets.EC2_SSH_KEY }}
+          TOKEN: ${{ secrets.TOKEN }}
         run: |
-          ssh -o StrictHostKeyChecking=no -i linux_key_5.pem $EC2_USER@$EC2_HOST << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/linux_key_5.pem $EC2_USER@$EC2_HOST << 'EOF'
+            set -e
+            set -x
+
+            # Update the instance and install necessary packages
             sudo yum update -y
-            sudo yum install -y nodejs npm
+            sudo yum install -y git nodejs npm
+
+            # Clone the GitHub repository
+            if [ ! -d "/home/$EC2_USER/githubactions_deneme" ]; then
+              git clone https://${TOKEN}@github.com/sumeyyekoruyucu/githubactions_deneme.git /home/$EC2_USER/githubactions_deneme
+            else
+              cd /home/$EC2_USER/githubactions_deneme && git pull
+            fi
+
+            # Navigate to the application directory and install dependencies
+            cd /home/$EC2_USER/githubactions_deneme/my-node-app
+            npm install
+
+            # Start the application using PM2
             sudo npm install -g pm2
-            cd /home/$EC2_USER/my-node-app
-            npm install || { echo 'npm install failed'; exit 1; }
             pm2 start app.js
 
-          # Configure Nginx
-          sudo amazon-linux-extras install nginx1 -y
-          sudo systemctl enable nginx
-          sudo systemctl start nginx
-          sudo bash -c 'cat > /etc/nginx/conf.d/my-node-app.conf' << EOL
-          server {
-              listen 80;
-              server_name sumeyyedev.site;
+            # Configure Nginx
+            sudo amazon-linux-extras install nginx1 -y
+            sudo systemctl enable nginx
+            sudo systemctl start nginx
+            sudo bash -c 'cat > /etc/nginx/conf.d/my-node-app.conf' << EOL
+            server {
+                listen 80;
+                server_name sumeyyedev.site;
 
-              location / {
-                  proxy_pass http://localhost:3000;
-                  proxy_http_version 1.1;
-                  proxy_set_header Upgrade \$http_upgrade;
-                  proxy_set_header Connection 'upgrade';
-                  proxy_set_header Host \$host;
-                  proxy_cache_bypass \$http_upgrade;
-              }
-          }
-          EOL
-          sudo nginx -t && sudo systemctl restart nginx
+                location / {
+                    proxy_pass http://localhost:3000;
+                    proxy_http_version 1.1;
+                    proxy_set_header Upgrade \$http_upgrade;
+                    proxy_set_header Connection 'upgrade';
+                    proxy_set_header Host \$host;
+                    proxy_cache_bypass \$http_upgrade;
+                }
+            }
+            EOL
+            sudo nginx -t && sudo systemctl restart nginx
           EOF
