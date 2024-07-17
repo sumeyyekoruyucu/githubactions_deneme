@@ -17,15 +17,16 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '20' # Node.js versiyonunu ihtiyacınıza göre ayarlayın
+      
       # Çalışma dizinini göstermek için adım ekle
       - name: Show working directory
         run: |
           pwd
           ls -l
 
-          # githubactions_deneme reposundaki my-node-app klasörünü iş akışının çalışma dizinine kopyala
+          # my-node-app klasörünü doğru yerden kopyala
       - name: Copy my-node-app directory to working directory
-        run: cp -r githubactions_deneme/my-node-app ./my-node-app
+        run: cp -r ./my-node-app ./githubactions_deneme/
 
       - name: Install AWS CLI
         run: |
@@ -33,7 +34,7 @@ jobs:
           unzip awscliv2.zip
           sudo ./aws/install --update
 
-       # EC2'ye dosyaları kopyalama
+      # EC2'ye dosyaları kopyalama
       - name: Copy files to EC2
         env:
           EC2_HOST: ${{ secrets.EC2_HOST }}
