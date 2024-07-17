@@ -19,11 +19,13 @@ jobs:
           node-version: '20' # Node.js versiyonunu ihtiyacınıza göre ayarlayın
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          npm install
         working-directory: ./my-node-app
 
       - name: Run tests
-        run: npm test
+        run: |
+          npm test
         working-directory: ./my-node-app
 
       - name: Install AWS CLI
@@ -53,7 +55,7 @@ jobs:
           sudo yum install -y nodejs npm
           sudo npm install -g pm2
           cd /home/$EC2_USER/my-node-app
-          npm install
+          npm install || { echo 'npm install failed'; exit 1; }
           pm2 start app.js
 
           # Configure Nginx
