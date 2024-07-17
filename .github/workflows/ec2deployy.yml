@@ -16,17 +16,24 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'  # Node.js sürümünü ihtiyacınıza göre ayarlayın
-
-      - name: Install dependencies
-        run: npm install
-        working-directory: ./githubactions_deneme/my-node-app
+          node-version: '20' # Node.js versiyonunu ihtiyacınıza göre ayarlayın
 
       - name: Install AWS CLI
         run: |
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
           unzip awscliv2.zip
-          sudo ./aws/install
+          sudo ./aws/install --update
+
+      - name: Copy files to EC2
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+        run: |
+          echo "${{ secrets.EC2_SSH_KEY }}" > linux_key_5.pem
+          chmod 400 linux_key_5.pem
+          ssh-keyscan -H $EC2_HOST >> ~/.ssh/known_hosts
+          scp -o StrictHostKeyChecking=no -i linux_key_5.pem -r ./githubactions_deneme/my-node-app/* $EC2_USER@$EC2_HOST:/home/$EC2_USER/my-node-app/
 
       - name: SSH and deploy
         env:
@@ -34,36 +41,32 @@ jobs:
           EC2_USER: ${{ secrets.EC2_USER }}
           EC2_KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
-          echo "${{ secrets.EC2_SSH_KEY }}" > linux_key_5.pem
-          chmod 400 linux_key_5.pem
-          ssh-keyscan -H $EC2_HOST >> ~/.ssh/known_hosts
-          scp -o StrictHostKeyChecking=no -i linux_key_5.pem -r ./githubactions_deneme/my-node-app/* $EC2_USER@$EC2_HOST:/home/$EC2_USER/my-node-app/
-
           ssh -o StrictHostKeyChecking=no -i linux_key_5.pem $EC2_USER@$EC2_HOST << 'EOF'
-            sudo yum update -y
-            sudo yum install -y nodejs npm
-            sudo npm install -g pm2
-            cd /home/$EC2_USER/my-node-app
-            npm install
-            pm2 start app.js
+          sudo yum update -y
+          sudo yum install -y nodejs npm
+          sudo npm install -g pm2
+          cd /home/$EC2_USER/my-node-app
+          npm install || { echo 'npm install failed'; exit 1; }
+          pm2 start app.js
 
-            # Configure Nginx
-            sudo amazon-linux-extras install nginx1 -y
-            sudo service nginx start
-            sudo bash -c 'cat > /etc/nginx/conf.d/my-node-app.conf' << EOL
-            server {
-                listen 80;
-                server_name sumeyyedev.site;
+          # Configure Nginx
+          sudo amazon-linux-extras install nginx1 -y
+          sudo systemctl enable nginx
+          sudo systemctl start nginx
+          sudo bash -c 'cat > /etc/nginx/conf.d/my-node-app.conf' << EOL
+          server {
+              listen 80;
+              server_name sumeyyedev.site;
 
-                location / {
-                    proxy_pass http://localhost:3000;
-                    proxy_http_version 1.1;
-                    proxy_set_header Upgrade \$http_upgrade;
-                    proxy_set_header Connection 'upgrade';
-                    proxy_set_header Host \$host;
-                    proxy_cache_bypass \$http_upgrade;
-                }
-            }
-            EOL
-            sudo service nginx restart
+              location / {
+                  proxy_pass http://localhost:3000;
+                  proxy_http_version 1.1;
+                  proxy_set_header Upgrade \$http_upgrade;
+                  proxy_set_header Connection 'upgrade';
+                  proxy_set_header Host \$host;
+                  proxy_cache_bypass \$http_upgrade;
+              }
+          }
+          EOL
+          sudo nginx -t && sudo systemctl restart nginx
           EOF
