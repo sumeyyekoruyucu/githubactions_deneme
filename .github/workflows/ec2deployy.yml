@@ -32,7 +32,8 @@ jobs:
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > ec2_key.pem
           chmod 400 ec2_key.pem
-          scp -o StrictHostKeyChecking=no -i ec2_key.pem -r ./my-node-app/* $EC2_USER@$EC2_HOST:/home/$EC2_USER/my-node-app/
+          ssh-keyscan -H $EC2_HOST >> ~/.ssh/known_hosts
+          scp -o StrictHostKeyChecking=no -i ec2_key.pem -r ./githubactions_deneme/my-node-app/* $EC2_USER@$EC2_HOST:/home/$EC2_USER/my-node-app/
 
       - name: SSH and deploy
         env:
