@@ -69,7 +69,7 @@ jobs:
           fi
 
           # Navigate to the application directory and install dependencies
-          cd /home/$EC2_USER/githubactions_deneme/my-node-app
+          cd /home/ec2-user/githubactions_deneme/my-node-app
           sudo npm install
 
           # Start the application using PM2
