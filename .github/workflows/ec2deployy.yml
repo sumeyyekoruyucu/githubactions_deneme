@@ -18,12 +18,17 @@ jobs:
         with:
           node-version: '20' # Node.js versiyonunu ihtiyacınıza göre ayarlayın
 
+          # githubactions_deneme reposundaki my-node-app klasörünü iş akışının çalışma dizinine kopyala
+      - name: Copy my-node-app directory to working directory
+        run: cp -r githubactions_deneme/my-node-app ./my-node-app
+
       - name: Install AWS CLI
         run: |
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
           unzip awscliv2.zip
           sudo ./aws/install --update
 
+       # EC2'ye dosyaları kopyalama
       - name: Copy files to EC2
         env:
           EC2_HOST: ${{ secrets.EC2_HOST }}
@@ -32,21 +37,22 @@ jobs:
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > linux_key_5.pem
           chmod 400 linux_key_5.pem
+          ssh-keyscan -H $EC2_HOST >> ~/.ssh/known_hosts
           scp -o StrictHostKeyChecking=no -i linux_key_5.pem -r ./my-node-app/* $EC2_USER@$EC2_HOST:/home/$EC2_USER/my-node-app/
 
+      # SSH ile bağlanarak EC2 üzerinde deploy işlemleri yapma
       - name: SSH and deploy
         env:
           EC2_HOST: ${{ secrets.EC2_HOST }}
           EC2_USER: ${{ secrets.EC2_USER }}
-          EC2_KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
           ssh -o StrictHostKeyChecking=no -i linux_key_5.pem $EC2_USER@$EC2_HOST << 'EOF'
-          sudo yum update -y
-          sudo yum install -y nodejs npm
-          sudo npm install -g pm2
-          cd /home/$EC2_USER/my-node-app
-          npm install || { echo 'npm install failed'; exit 1; }
-          pm2 start app.js
+            sudo yum update -y
+            sudo yum install -y nodejs npm
+            sudo npm install -g pm2
+            cd /home/$EC2_USER/my-node-app
+            npm install || { echo 'npm install failed'; exit 1; }
+            pm2 start app.js
 
           # Configure Nginx
           sudo amazon-linux-extras install nginx1 -y
