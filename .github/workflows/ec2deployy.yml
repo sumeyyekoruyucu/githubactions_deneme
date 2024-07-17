@@ -60,9 +60,7 @@ jobs:
           sudo yum install -y git
 
           # Clone or pull the GitHub repository
-          if [ ! -d "/home/$EC2_USER/githubactions_deneme/.git" ]; then
-            git clone https://${TOKEN}@github.com/sumeyyekoruyucu/githubactions_deneme.git /home/$EC2_USER/githubactions_deneme
-          fi
+            git clone https://${TOKEN}@github.com/sumeyyekoruyucu/githubactions_deneme.git
 
           # Change directory to the cloned repository
           cd /home/$EC2_USER/githubactions_deneme
