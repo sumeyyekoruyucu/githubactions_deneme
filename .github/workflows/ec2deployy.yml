@@ -84,8 +84,8 @@ jobs:
           [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # nvm bash tamamlamasını yükler
           nvm --version  # nvm sürümünü kontrol eder
           nvm install 16
-          sudo node -v
-          sudo npm -v
+          node -v
+          npm -v
 
           # Start the application using PM2
           sudo npm install -g pm2
