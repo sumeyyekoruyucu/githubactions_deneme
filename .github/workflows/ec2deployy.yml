@@ -98,7 +98,7 @@ jobs:
           sudo bash -c 'cat > /etc/nginx/conf.d/my-node-app.conf' << EOL
           server {
               listen 80;
-              server_name sumeyyedev.site;
+              server_name sumeyyedev.site www.sumeyyedev.site;
 
               location / {
                   proxy_pass http://localhost:3000;
