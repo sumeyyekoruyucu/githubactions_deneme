@@ -88,8 +88,8 @@ jobs:
           npm -v
 
           # Start the application using PM2
-          sudo npm install -g pm2
-          sudo pm2 start app.js --name my-node-app
+          npm install -g pm2
+          pm2 start app.js --name my-node-app
 
           # Configure Nginx
           sudo amazon-linux-extras install nginx1 -y
