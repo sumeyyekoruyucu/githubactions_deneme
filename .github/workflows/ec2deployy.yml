@@ -12,31 +12,27 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          node-version: '16' # İlk olarak bir Node.js sürümü kuruyoruz
 
       - name: Install nvm
         run: |
-          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
+          echo 'export NVM_DIR="$HOME/.nvm"' >> $GITHUB_ENV
+          echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $GITHUB_ENV
+          source $GITHUB_ENV
 
-      - name: Setup Node.js
+      - name: Install specific Node.js versions
         run: |
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm ls-remote
-          # Tüm mevcut Node.js sürümlerini al
-          versions=$(nvm ls-remote | awk '{print $1}')
-
-          # Her sürümü kur
-          for version in $versions; do
-          nvm install $version
+          source $NVM_DIR/nvm.sh
+          versions=("10" "12" "14" "16" "18" "20")
+          for version in "${versions[@]}"; do
+            nvm install $version
           done
-          chmod +x install_all_node_versions.sh
-          ./install_all_node_versions.sh
-          nvm ls
-          nvm use 16
 
+          # Kurulu sürümleri listele
+          nvm ls
+    
       - name: Install AWS CLI
         run: |
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
