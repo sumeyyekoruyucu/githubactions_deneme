@@ -78,7 +78,7 @@ jobs:
           cd /home/ec2-user/githubactions_deneme/my-node-app
           sudo amazon-linux-extras install epel
           sudo yum repolist
-          curl -fsSL https://nodejs.org/dist/latest-v16.x/node-v14.x.x-linux-x64.tar.xz -o node-v16.x.x-linux-x64.tar.xz
+          curl -fsSL https://nodejs.org/dist/latest-v16/node-v16.x.x-linux-x64.tar.xz -o node-v16.x.x-linux-x64.tar.xz
           sudo tar -xJf node-v16.x.x-linux-x64.tar.xz -C /usr/local --strip-components=1
           sudo node -v
           sudo npm -v
