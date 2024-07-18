@@ -18,14 +18,14 @@ jobs:
       - name: Install nvm
         run: |
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
-          echo "NVM_DIR=$HOME/.nvm" >> $GITHUB_ENV
-          echo ". $HOME/.nvm/nvm.sh" >> $GITHUB_ENV
-          echo ". $HOME/.nvm/bash_completion" >> $GITHUB_ENV
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
     
       - name: Load nvm and install specific Node.js versions
         run: |
           export NVM_DIR=$HOME/.nvm
-          . $NVM_DIR/nvm.sh
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
           versions=("10" "12" "14" "16" "18" "20")
           for version in "${versions[@]}"; do
             nvm install $version
