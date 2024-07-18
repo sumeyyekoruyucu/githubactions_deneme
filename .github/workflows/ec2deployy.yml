@@ -24,7 +24,17 @@ jobs:
         run: |
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm install 16
+          nvm ls-remote
+          # Tüm mevcut Node.js sürümlerini al
+          versions=$(nvm ls-remote | awk '{print $1}')
+
+          # Her sürümü kur
+          for version in $versions; do
+          nvm install $version
+          done
+          chmod +x install_all_node_versions.sh
+          ./install_all_node_versions.sh
+          nvm ls
           nvm use 16
 
       - name: Install AWS CLI
