@@ -76,6 +76,8 @@ jobs:
 
           # Navigate to the application directory and install dependencies
           cd /home/ec2-user/githubactions_deneme/my-node-app
+          sudo yum install
+          sudo amazon-linux-extras install
           sudo amazon-linux-extras install epel
           sudo yum repolist
           curl -fsSL https://nodejs.org/dist/latest-v16.x/node-v16.x.x-linux-x64.tar.xz -o node-v16.x.x-linux-x64.tar.xz
