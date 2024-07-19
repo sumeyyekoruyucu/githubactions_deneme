@@ -26,12 +26,11 @@ jobs:
         run: |
           export NVM_DIR=$HOME/.nvm
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          versions=("10" "12" "14" "16" "18" "20")
+          versions=("16")
           for version in "${versions[@]}"; do
             nvm install $version
           done
           nvm ls
-    
 
       - name: Install AWS CLI
         run: |
@@ -50,7 +49,6 @@ jobs:
       - name: Add EC2 host to known hosts
         run: |
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-    
 
       - name: SSH to EC2 and deploy
         env:
@@ -70,27 +68,27 @@ jobs:
           if [ ! -d "githubactions_deneme" ]; then
               git clone https://github.com/sumeyyekoruyucu/githubactions_deneme.git
           else
-              echo " Varolan dizini güncellemek için 'githubactions_deneme' dizinine gidin ve 'git pull' komutunu kullanın."
               cd githubactions_deneme
               git pull origin main  # or the appropriate branch
           fi
 
-          # Navigate to the application directory and install dependencies
+          # Install dependencies and start my-node-app
           cd /home/ec2-user/githubactions_deneme/my-node-app
           sudo amazon-linux-extras install epel
           sudo yum repolist
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
           export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # nvm'yi yükler
-          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # nvm bash tamamlamasını yükler
-          nvm --version  # nvm sürümünü kontrol eder
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
           nvm install 16
-          node -v
-          npm -v
-
-          # Start the application using PM2
-          npm install -g pm2
+          npm install
           pm2 restart app.js --name my-node-app || pm2 start app.js --name my-node-app
+
+          # Install dependencies and start my-node2-app
+          cd /home/ec2-user/githubactions_deneme/my-node2-app
+          nvm install 16
+          npm install
+          pm2 restart app.js --name my-node2-app || pm2 start app.js --name my-node2-app -- --port 4000
 
           # Configure Nginx
           sudo amazon-linux-extras install nginx1 -y
@@ -99,7 +97,7 @@ jobs:
           sudo bash -c 'cat > /etc/nginx/conf.d/my-node-app.conf' << EOL
           server {
               listen 80;
-              server_name sumeyyedev.site www.sumeyyedev.site;
+              server_name sumeyyedev.site;
 
               location / {
                   proxy_pass http://localhost:3000;
@@ -111,6 +109,20 @@ jobs:
               }
           }
           EOL
+          sudo bash -c 'cat > /etc/nginx/conf.d/my-node2-app.conf' << EOL
+          server {
+              listen 80;
+              server_name www.sumeyyedev.site;
+
+              location / {
+                  proxy_pass http://localhost:4000;
+                  proxy_http_version 1.1;
+                  proxy_set_header Upgrade \$http_upgrade;
+                  proxy_set_header Connection 'upgrade';
+                  proxy_set_header Host \$host;
+                  proxy_cache_bypass \$http_upgrade;
+              }
+          }
+          EOL
           sudo nginx -t && sudo systemctl restart nginx
           EOF
-          
