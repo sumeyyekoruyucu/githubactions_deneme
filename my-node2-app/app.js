@@ -1,7 +1,7 @@
 const http = require('http');
 
 // Render platformunda `PORT` environment variable kullanılır
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 // Heroku veya Render gibi platformlar dinamik host kullanır
 const hostname = '0.0.0.0';
