@@ -7,15 +7,9 @@ const port = process.env.PORT || 4000;
 const hostname = '0.0.0.0';
 
 const server = http.createServer((req, res) => {
-  if (req.url.startsWith('/app2')) {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/plain');
-    res.end('Hello, Fatih Bey!\n');
-  } else {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/plain');
-    res.end('Hello from my-node2-app!\n');
-  }
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/plain');
+  res.end('Hello, Fatih bey!\n');
 });
 
 server.listen(port, hostname, () => {

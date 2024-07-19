@@ -84,7 +84,7 @@ jobs:
           npm install
           npm install -g pm2
           pm2 -v
-          pm2 restart app.js --name my-node-app || pm2 start app.js --name my-node-app
+          pm2 restart app.js --name my-node-app || pm2 start app.js --name my-node-app -- --port 3000
 
           # Install dependencies and start my-node2-app
           cd /home/ec2-user/githubactions_deneme/my-node2-app
