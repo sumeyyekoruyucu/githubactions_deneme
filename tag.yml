@@ -3,7 +3,7 @@ name: Tag Triggered Workflow
 on:
   push:
     tags:
-      - 'nefise'  # 'node' adlı etikette bu iş akışı çalışır
+      - 'v1'  # 'node' adlı etikette bu iş akışı çalışır
 
 jobs:
   build-and-test:

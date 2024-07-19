@@ -50,6 +50,7 @@ jobs:
       - name: Add EC2 host to known hosts
         run: |
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+    
 
       - name: SSH to EC2 and deploy
         env:
@@ -112,3 +113,4 @@ jobs:
           EOL
           sudo nginx -t && sudo systemctl restart nginx
           EOF
+          
