@@ -82,12 +82,16 @@ jobs:
           [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
           nvm install 16
           npm install
+          npm install -g pm2
+          pm2 -v
           pm2 restart app.js --name my-node-app || pm2 start app.js --name my-node-app
 
           # Install dependencies and start my-node2-app
           cd /home/ec2-user/githubactions_deneme/my-node2-app
           nvm install 16
           npm install
+          npm install -g pm2
+          pm2 -v
           pm2 restart app.js --name my-node2-app || pm2 start app.js --name my-node2-app -- --port 4000
 
           # Configure Nginx
