@@ -1,0 +1,66 @@
+name: Repo Tetikleme ve İşlemler
+
+on:
+  schedule:
+    # Tek saatlerde tetiklenecek
+    - cron: '0 1,3,5,7,9,11,13,15,17,19,21,23 * * *' 
+    # Çift saatlerde tetiklenecek
+    - cron: '0 2,4,6,8,10,12,14,16,18,20,22 * * *'
+
+jobs:
+  react-job:
+    if: ${{ github.event.schedule.cron == '0 1,3,5,7,9,11,13,15,17,19,21,23 * * *' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'  # Kullanmak istediğiniz Node.js sürümünü buraya ayarlayın
+
+      - name: Install dependencies and build
+        
+        run: |
+          cd my-app
+          npm install
+          npm run build
+          
+  nodejs-job:
+    if: ${{ github.event.schedule.cron == '0 2,4,6,8,10,12,14,16,18,20,22 * * *' }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '16'
+
+    - name: Install PM2
+      run: npm install -g pm2
+
+    - name: Install Dependencies
+      run: |
+        cd my-node-app
+        npm install
+
+    - name: Start Application
+      run: |
+        cd my-node-app
+        pm2 start app.js
+        pm2 save
+
+    - name: Verify Deployment
+      run: |
+        cd my-node-app
+        pm2 list
+          
+  echo-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo Current Time
+        run: |
+          echo "Current time: $(date)"
