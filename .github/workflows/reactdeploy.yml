@@ -1,12 +1,8 @@
-name: CI/CD Pipeline
+name: React
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  schedule:
+    - cron: '0 12 * * *' # Her gun 12 de tetiklenir.
 
 jobs:
   build:
