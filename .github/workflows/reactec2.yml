@@ -79,7 +79,12 @@ jobs:
           npm run build
           npm install -g pm2
           npm install -g serve
+          # Start the React app using pm2
           pm2 start serve --name "react-app" -- -s build -l 3000
+          pm2 save
+          pm2 startup
+          # Check PM2 status
+          pm2 status
 
           # Configure Nginx
           sudo amazon-linux-extras install nginx1 -y
@@ -100,5 +105,9 @@ jobs:
               }
           }
           EOL
-          sudo nginx -t && sudo systemctl restart nginx
+          sudo nginx -t
+          sudo systemctl restart nginx
+          
+          # Check Nginx status
+          sudo systemctl status nginx
           EOF
