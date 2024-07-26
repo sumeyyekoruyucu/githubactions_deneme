@@ -81,10 +81,9 @@ jobs:
           npm install -g serve
 
           # Start the React app using pm2
-          pm2 start serve --name "react-app" -- -s build -l 3000
+          pm2 start npx --name "react-app" -- serve -s build -l 3000
           pm2 save
-          pm2_status=$(pm2 startup | tail -n 1)
-          eval sudo $pm2_status
+          pm2 startup systemd -u ec2-user --hp /home/ec2-user
 
           # Check PM2 status
           pm2 status
