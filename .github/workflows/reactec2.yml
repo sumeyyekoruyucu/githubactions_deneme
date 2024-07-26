@@ -78,6 +78,7 @@ jobs:
           npm install
           npm run build
           npm install -g serve
+          npm install -g pm2
 
           # Check if PM2 process exists and restart
           if pm2 list | grep -q "react-app"; then
