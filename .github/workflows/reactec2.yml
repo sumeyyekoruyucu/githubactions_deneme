@@ -74,9 +74,9 @@ jobs:
           [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
           nvm install 16
           nvm use 16
+          cd /home/ec2-user/githubactions_deneme/react
           npm install
           npm install -g pm2
-          cd /home/ec2-user/githubactions_deneme/react
           pm2 start npx --name "react-app" -- serve -s build -l 3000
           pm2 save
           pm2 startup systemd -u ec2-user --hp /home/ec2-user
