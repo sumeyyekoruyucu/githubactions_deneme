@@ -78,7 +78,7 @@ jobs:
           npm install
           npm run build
           npm install -g serve
-          pm2 start npx --name "react-app" -- serve -s build -l 3000
+          pm2 start serve --name "react-app" -- -s build -l 3000
 
           # Configure Nginx
           sudo amazon-linux-extras install nginx1 -y
