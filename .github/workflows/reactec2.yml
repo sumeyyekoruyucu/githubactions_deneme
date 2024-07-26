@@ -13,19 +13,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Install nvm
+      - name: Install nvm and Node.js
         run: |
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-    
-      - name: Load nvm and install specific Node.js version
-        run: |
-          export NVM_DIR=$HOME/.nvm
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
           nvm install 16
           nvm use 16
+          echo "Node version:"
+          node -v
+          echo "NPM version:"
+          npm -v
 
       - name: Install AWS CLI
         run: |
@@ -67,22 +65,28 @@ jobs:
               git pull origin main
           fi
 
-          # Install dependencies and build react
-          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
+          # Navigate to the correct directory and install dependencies
+          cd /home/ec2-user/githubactions_deneme/react
+          if [ ! -d "$HOME/.nvm" ]; then
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
+          fi
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
           [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
           nvm install 16
           nvm use 16
-          cd /home/ec2-user/githubactions_deneme/react
           npm install
-          npm install -g pm2
+          npm run build
+          npm install -g serve
+
+          # Check if PM2 process exists and restart
+          if pm2 list | grep -q "react-app"; then
+              pm2 stop react-app
+              pm2 delete react-app
+          fi
           pm2 start npx --name "react-app" -- serve -s build -l 3000
           pm2 save
           sudo env PATH=$PATH:/home/ec2-user/.nvm/versions/node/v16.20.2/bin pm2 startup systemd -u ec2-user --hp /home/ec2-user
-
-          # Check PM2 status
-          pm2 status
 
           # Configure Nginx
           sudo amazon-linux-extras install nginx1 -y
@@ -105,7 +109,4 @@ jobs:
           EOL
           sudo nginx -t
           sudo systemctl restart nginx
-          
-          # Check Nginx status
-          sudo systemctl status nginx
           EOF
