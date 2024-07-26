@@ -111,3 +111,4 @@ jobs:
           # Check Nginx status
           sudo systemctl status nginx
           EOF
+          
