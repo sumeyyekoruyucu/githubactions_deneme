@@ -68,7 +68,7 @@ jobs:
           fi
 
           # Install dependencies and build react
-          
+
           cd /home/ec2-user/githubactions_deneme/react
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
           export NVM_DIR="$HOME/.nvm"
@@ -78,13 +78,13 @@ jobs:
           nvm use 16
           npm install
           npm run build
-          npm install -g pm2
           npm install -g serve
 
           # Start the React app using pm2
+          npm install -g pm2
           pm2 start npx --name "react-app" -- serve -s build -l 3000
           pm2 save
-          pm2 startup systemd -u ec2-user --hp /home/ec2-user
+          sudo env PATH=$PATH:/home/ec2-user/.nvm/versions/node/v16.20.2/bin pm2 startup systemd -u ec2-user --hp /home/ec2-user
 
           # Check PM2 status
           pm2 status
