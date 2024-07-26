@@ -12,25 +12,20 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-        with:
-          node-version: '16' # İlk olarak bir Node.js sürümü kuruyoruz
 
       - name: Install nvm
         run: |
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
           export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
     
-      - name: Load nvm and install specific Node.js versions
+      - name: Load nvm and install specific Node.js version
         run: |
           export NVM_DIR=$HOME/.nvm
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          versions=("16")
-          for version in "${versions[@]}"; do
-            nvm install $version
-          done
-          nvm ls
+          nvm install 16
+          nvm use 16
 
       - name: Install AWS CLI
         run: |
@@ -66,33 +61,29 @@ jobs:
 
           # Clone or pull the GitHub repository
           if [ ! -d "/home/ec2-user/githubactions_deneme" ]; then
-              git clone https://github.com/sumeyyekoruyucu/githubactions_deneme.git
+              git clone https://github.com/sumeyyekoruyucu/githubactions_deneme.git /home/ec2-user/githubactions_deneme
           else
               cd /home/ec2-user/githubactions_deneme
-              git pull origin main  # or the appropriate branch
+              git pull origin main
           fi
 
           # Install dependencies and build react
           cd /home/ec2-user/githubactions_deneme/react
-          sudo amazon-linux-extras install epel
-          sudo yum repolist
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
           export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
           nvm install 16
-          nvm use 16 
+          nvm use 16
           npm install
           npm run build
-          npm install -g pm2
-          pm2 -v
-          pm2 restart App.js --name react-app || pm2 start App.js --name react-app -- --port 3000
+          npm install -g serve
+          pm2 start npx --name "react-app" -- serve -s build -l 3000
 
           # Configure Nginx
           sudo amazon-linux-extras install nginx1 -y
           sudo systemctl enable nginx
           sudo systemctl start nginx
-          sudo systemctl status nginx
           sudo bash -c 'cat > /etc/nginx/conf.d/react.conf' << EOL
           server {
               listen 80;
