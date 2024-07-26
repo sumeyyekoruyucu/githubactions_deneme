@@ -79,7 +79,7 @@ jobs:
           npm install -g pm2
           pm2 start npx --name "react-app" -- serve -s build -l 3000
           pm2 save
-          pm2 startup systemd -u ec2-user --hp /home/ec2-user
+          sudo env PATH=$PATH:/home/ec2-user/.nvm/versions/node/v16.20.2/bin pm2 startup systemd -u ec2-user --hp /home/ec2-user
 
           # Check PM2 status
           pm2 status
